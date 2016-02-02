@@ -5,11 +5,11 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-heading">Dashboard</div>
+                <div class="panel-heading">Dashboard my pofile</div>
 
                 <div class="panel-body">
-                     @if (!$user)
-                       ERROR
+                     @if (!$posts->count())
+                     There are no posts now
                      @else
                     
                      <div class="">

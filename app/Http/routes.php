@@ -34,16 +34,25 @@ Route::group(['middleware' => 'web'], function () {
    
     Route::auth();
 
-    Route::get('home', 'HomeController@index');
+    Route::get('home', 'PostController@index');
 
     // dozvoli im samo na users da pristapat do rutite, vo function() callbackot
 	Route::group(['middleware' => ['auth']], function(){
 
-		// POSTS
-			// pokazhi ja formata za kreiranje na nov post
-			Route::get('create-post', 'PostController@create');
+		
+		  	Route::get('users/{id}', 'UserController@show');
+			Route::get('posts/add', 'PostController@create');
 
-			// otkoga ti e pokazhana formata i si kliknal submit, zachuvaj go postot
-			Route::post('create-post', 'PostController@store');
+			Route::post('posts/add', 'PostController@store');
+
+			Route::get('posts/{id}',['as' => 'post', 'uses' => 'PostController@show'])->where('id', '[0-9]+');
+
+			Route::get('posts/like/{id}', 'LikeController@store');
+
+			Route::get('posts/unlike/{id}', 'LikeController@destroy');
+
+			Route::post('comments/add', 'CommentController@store');
+
+			Route::post('comments/delete/{id}', 'CommentController@destroy');
 	});
 });

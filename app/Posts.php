@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Models;
+namespace App;
 
 // KAJ hasMany VTORIOT ARGUMENT E FOREIGN KEY VO TABELATA SHTO E PRV ARGUMENT
 // KAJ belongsTo VTORIOT ARGUMENT E FOREIGN KEY NA MOMENTALNATA TABELA
 use Illuminate\Database\Eloquent\Model;
 
-class Post extends Model
+class Posts extends Model
 {
     protected $guarded = [];
 
 
 	public function comments(){
-		return $this->hasMany('App\Models\Comment', 'post_id');	 // ova post_id, eloquent bi trebalo da go locira sam
+		return $this->hasMany('App\Comments', 'post_id');	 // ova post_id, eloquent bi trebalo da go locira sam
 		// bidejkji se shto e so *_id se podrazbira deka e foreign. Inaku post_id e nadvoreshen kluch vo tabelata comments 
 	}
 
@@ -26,4 +26,8 @@ class Post extends Model
 	}
 
 	// likes
+	public function likes(){
+		return $this->hasMany('App\Likes', 'post_id');
+	}
+
 }

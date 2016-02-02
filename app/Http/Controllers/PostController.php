@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
+use App\Posts;
+use App\User;
 use Redirect;
-use App\Http\Requests\PostFormRequest;
 
 class PostController extends Controller
 {
@@ -20,8 +20,9 @@ class PostController extends Controller
      */
     public function index()
     {
-        
-      
+        $posts = Posts::where('type','found')->orderBy('created_at','desc')->paginate(30); // ako sakame del po del mozhe so paginate()
+         
+        return view('home')->withPosts($posts);
     }
 
     /**
@@ -31,7 +32,7 @@ class PostController extends Controller
      */
     public function create(Request $request)
     {
-        return view('posts.add'); 
+        return view('posts.create'); 
     }
 
 
@@ -43,9 +44,34 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $post = new Post(); // model
-        $post->message = $request->get('body');
+        $post = new Posts(); // model
+        $post->message = $request->get('message');
         $post->user_id = $request->user()->id;
+        $post->address = "dwd";
+        $post->longitude = 12;
+        $post->latitude = 12;
+        $post->post_picture = "2323";
+        $post->type = "found";
+        $post->save();
         return redirect('home');
     }  
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //  pokazhi post so soodvetniot id, zaedno so site negovi komentari
+        $post = Posts::where('id', $id)->first();
+        if(!$post){
+        //     // ne postoi toj post :(
+            return redirect('/home').withErrors('Requested post does not exist');
+        }
+            $comments = $post->comments;
+        return view('posts.show')->withPost($post)->withComments($comments);
+     
+    }
 }

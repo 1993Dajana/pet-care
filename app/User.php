@@ -28,4 +28,8 @@ class User extends Authenticatable
     // public function subscribers(){
     //     return $this->hasMany('App\User');
     // }
+
+    public function posts(){
+        return $this->hasMany('App\Posts', 'user_id');
+    }
 }
