@@ -33,6 +33,6 @@ class CommentController extends Controller
         $comment->post_id = $request->get('post_id'); // ->post_id
         $comment->message = $request->get('message');
         $comment->save();
-        return redirect('home')->with('message', 'Comment is succesfully published');
+        // return redirect('home')->with('message', 'Comment is succesfully published');
     }
 }

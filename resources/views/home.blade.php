@@ -8,10 +8,14 @@
                 <div class="panel-heading">Dashboard</div>
 
                 <div class="panel-body">
-                     @if (!$user)
-                       ERROR
-                     @else
-                    
+(ova klikni go samo ako ova ne e tvojot profil. Angular del)    
+  <form method="post" action="/users/subscribe/{{ $user->id }}" >
+
+  <input type="hidden" name="_token" value="{{ csrf_token() }}">
+  
+    <input type="submit" name="subscribe" value="subscribe"/>
+
+  </form>                   
                      <div class="">
                       @foreach($posts as $post)
                    
@@ -53,7 +57,7 @@
                       @endforeach
                           {!! $posts->render() !!} <!--so paginate-->
                   </div>
-                    @endif
+                   
                 </div>
 
             </div>

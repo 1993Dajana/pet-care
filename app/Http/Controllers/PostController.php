@@ -10,6 +10,7 @@ use App\Posts;
 use App\User;
 use Redirect;
 
+
 class PostController extends Controller
 {
     
@@ -18,11 +19,13 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $posts = Posts::where('type','found')->orderBy('created_at','desc')->paginate(30); // ako sakame del po del mozhe so paginate()
-         
-        return view('home')->withPosts($posts);
+        $user = $request->user();
+        $posts = $user->posts;
+        return response()->json($user);
+        // return view('home')->withPosts($posts)->withUser($user);
     }
 
     /**
@@ -53,7 +56,7 @@ class PostController extends Controller
         $post->post_picture = "2323";
         $post->type = "found";
         $post->save();
-        return redirect('home');
+        // return redirect('home');
     }  
 
     /**
@@ -67,11 +70,13 @@ class PostController extends Controller
         //  pokazhi post so soodvetniot id, zaedno so site negovi komentari
         $post = Posts::where('id', $id)->first();
         if(!$post){
-        //     // ne postoi toj post :(
-            return redirect('/home').withErrors('Requested post does not exist');
+                // ne postoi toj post, vrakja 500 error           
         }
-            $comments = $post->comments;
-        return view('posts.show')->withPost($post)->withComments($comments);
+        $comments = $post->comments;
+        $likes = $post->likes;
+        return response()->json($post, 200);
+                 // ->setCallback($request->input('callback'));
+        // return view('posts.show')->withPost($post)->withComments($comments);
      
     }
 }

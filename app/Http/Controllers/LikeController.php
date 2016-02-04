@@ -21,7 +21,7 @@ class LikeController extends Controller
         $like->user_id = $request->user()->id;
         $like->post_id = $id;
         $like->save();
-        return redirect('home');
+        // return redirect('home');
     } 
 
    /**
@@ -38,9 +38,8 @@ class LikeController extends Controller
         if($like){
         	$like->delete();
         } else {
-        	$data['errors'] = "No permission"; // ubavo bi bilo so errori
+        	// $data['errors'] = "No permission"; // ubavo bi bilo so errori
         }
-
-        return redirect('/home')->with($data); 
+        // return redirect('/home')->with($data); 
     }
 }
