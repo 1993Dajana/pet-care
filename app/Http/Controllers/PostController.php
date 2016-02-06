@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Http\Response;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Posts;
 use App\User;
 use Redirect;
+use Log;
 
 
 class PostController extends Controller
@@ -23,8 +24,9 @@ class PostController extends Controller
     {
         $posts = Posts::where('type','found')->orderBy('created_at','desc')->paginate(30); // ako sakame del po del mozhe so paginate()
         $user = $request->user();
-        $posts = $user->posts;
-        return response()->json($user);
+        // $posts = $user->posts;
+        Log::info('Vlegov vo index, me povikava.');
+        return response()->json(['user' => $user, 'posts' => $posts]);
         // return view('home')->withPosts($posts)->withUser($user);
     }
 

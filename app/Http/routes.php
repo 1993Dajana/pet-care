@@ -37,34 +37,34 @@ Route::group(['middleware' => 'web'], function () {
 	Route::group(['middleware' => ['auth']], function(){
 
 
-		Route::group(array('prefix' => 'api'), function() {  
+		// Route::group(array('prefix' => 'api'), function() {  
 
 			// Route::get('users/{id}', 'UserController@show');
 
 			// Route::get('api/posts', 'PostController@index');
 
 
-			Route::get('api/posts', 'PostController@index');
+			Route::get('posts', 'PostController@index');
 
-			Route::get('api/users/{id}','UserController@user_posts')->where('id', '[0-9]+');
+			Route::get('users/{id}','UserController@user_posts')->where('id', '[0-9]+');
 
-		  	Route::post('api/users/subscribe/{id}', 'UserController@subscribe')->where('id', '[0-9]+');
+		  	Route::post('users/subscribe/{id}', 'UserController@subscribe')->where('id', '[0-9]+');
 
-			Route::get('api/posts/add', 'PostController@create');
+			Route::get('posts/add', 'PostController@create');
 
-			Route::post('api/posts/add', 'PostController@store');
+			Route::post('posts/add', 'PostController@store');
 
-			Route::get('api/posts/{id}',['as' => 'post', 'uses' => 'PostController@show'])->where('id', '[0-9]+');
+			Route::get('posts/{id}',['as' => 'post', 'uses' => 'PostController@show'])->where('id', '[0-9]+');
 
-			Route::get('api/posts/like/{id}', 'LikeController@store');
+			Route::get('posts/like/{id}', 'LikeController@store');
 
-			Route::get('api/posts/unlike/{id}', 'LikeController@destroy');
+			Route::get('posts/unlike/{id}', 'LikeController@destroy');
 
-			Route::post('api/comments/add', 'CommentController@store');
+			Route::post('comments/add', 'CommentController@store');
 
-			Route::post('api/comments/delete/{id}', 'CommentController@destroy');	
+			Route::post('comments/delete/{id}', 'CommentController@destroy');	
 
-		 });
+		 // });
 		
 		  	
 		  
