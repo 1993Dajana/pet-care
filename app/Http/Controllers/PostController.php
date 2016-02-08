@@ -15,6 +15,17 @@ use Log;
 class PostController extends Controller
 {
     
+     public function __construct()
+   {
+       // Apply the jwt.auth middleware to all methods in this controller
+       // except for the authenticate method. We don't want to prevent
+       // the user from retrieving their token if they don't already have it
+    Log::info('constructor PostController - before');
+   $this->middleware('jwt.auth');
+        Log::info('constructor PostController - after');
+   }
+
+
     /**
      * Display a listing of the resource. This function is handling root request (localhost:8000)
      *
@@ -22,10 +33,10 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
+        Log::info('Vlegov vo index, me povikava.');
         $posts = Posts::where('type','found')->orderBy('created_at','desc')->paginate(30); // ako sakame del po del mozhe so paginate()
         $user = $request->user();
         // $posts = $user->posts;
-        Log::info('Vlegov vo index, me povikava.');
         return response()->json(['user' => $user, 'posts' => $posts]);
         // return view('home')->withPosts($posts)->withUser($user);
     }

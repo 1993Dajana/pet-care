@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
 });
 
 /*
@@ -29,12 +29,19 @@ Route::get('/', function () {
 
 Route::group(['middleware' => 'web'], function () {
    
-    Route::auth();
+    // Route::auth(); // ne go koristime vgradenoto 5.2
 
-    
+	Route::group(['middleware' => 'cors' ,'prefix' => 'api'], function()
+	{
+	    Route::resource('authenticate', 'AuthenticateController', ['only' => ['index']]); // only index method
+	    Route::post('authenticate', 'AuthenticateController@authenticate'); // authenticate handles generating and returning a JWT.
+	    Route::get('authenticate/user', 'AuthenticateController@getAuthenticatedUser');
+	    Route::resource('register', 'RegisterController', ['only' => ['store']]); // only store method
+	    Route::resource('posts', 'PostController');
+	});  
 
-    // dozvoli im samo na users da pristapat do rutite, vo function() callbackot
-	Route::group(['middleware' => ['auth']], function(){
+   
+	// Route::group(['middleware' => ['auth']], function(){
 
 
 		// Route::group(array('prefix' => 'api'), function() {  
@@ -43,18 +50,19 @@ Route::group(['middleware' => 'web'], function () {
 
 			// Route::get('api/posts', 'PostController@index');
 
+			
 
-			Route::get('posts', 'PostController@index');
+			
 
 			Route::get('users/{id}','UserController@user_posts')->where('id', '[0-9]+');
 
 		  	Route::post('users/subscribe/{id}', 'UserController@subscribe')->where('id', '[0-9]+');
 
-			Route::get('posts/add', 'PostController@create');
+			// Route::get('posts/add', 'PostController@create');
 
-			Route::post('posts/add', 'PostController@store');
+			// Route::post('posts/add', 'PostController@store');
 
-			Route::get('posts/{id}',['as' => 'post', 'uses' => 'PostController@show'])->where('id', '[0-9]+');
+			// Route::get('posts/{id}',['as' => 'post', 'uses' => 'PostController@show'])->where('id', '[0-9]+');
 
 			Route::get('posts/like/{id}', 'LikeController@store');
 
@@ -68,11 +76,7 @@ Route::group(['middleware' => 'web'], function () {
 		
 		  	
 		  
-	});
-
- Route::any('{path?}', function() { return view('index'); })->where("path", ".+");
+	// });
 
 });
 
-
-// all routes that are not catched before i.e. front-end AngularJS will be catch here.
