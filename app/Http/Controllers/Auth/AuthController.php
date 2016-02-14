@@ -67,7 +67,7 @@ class AuthController extends Controller
      */
     protected function create(array $data)
     {
-        // UploadPhoto service.
+        // UploadPhoto service - ne se koristi tuka (finalno)
         if(Input::hasFile('profile_picture')){
             $file = Input::file('profile_picture');
             $extension = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);

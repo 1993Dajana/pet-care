@@ -20,7 +20,7 @@ class CreatePosts extends Migration
                       ->references('id')->on('users')       // so ova povrzuvas i kazuvas referenca na author_id e id-to na users tabelata
                       ->onDelete('cascade');                // so ova kazuvas ako go izbriseme user-ot od users tabelata, kaskadno da se izbrisat site negovi postovi (vo posts tabelata)
                 $table->text('message');
-                $table->string('address');
+                $table->string('address')->nullable();
                 $table->timestamps();   // publishedon i last modifed e ova :D
                 $table->float('longitude');
                 $table->float('latitude');

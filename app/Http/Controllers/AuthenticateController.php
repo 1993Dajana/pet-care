@@ -10,6 +10,9 @@ use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\User;
 // use GeoIP;
+use Log;
+use File;
+use Intervention\Image\Facades\Image as Image;
 
 class AuthenticateController extends Controller
 {
@@ -37,10 +40,11 @@ class AuthenticateController extends Controller
       public function authenticate(Request $request)
     {
         $credentials = $request->only('email', 'password');
-
+        // Log::info('authenticate');
         try {
             // verify the credentials and create a token for the user
             if (! $token = JWTAuth::attempt($credentials)) {
+                // Log::info('401 :(');
                 return response()->json(['error' => 'invalid_credentials'], 401);
             }
         } catch (JWTException $e) {
@@ -55,11 +59,15 @@ class AuthenticateController extends Controller
 
     public function getAuthenticatedUser()
     {
+
         try {
 
             if (! $user = JWTAuth::parseToken()->authenticate()) {
                 return response()->json(['user_not_found'], 404);
             }
+
+
+        // the token is valid and we have found the user via the sub claim
 
         } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
 
@@ -75,7 +83,13 @@ class AuthenticateController extends Controller
 
         }
 
-        // the token is valid and we have found the user via the sub claim
+
+        // namesto filename na profile-picture-ot na user-ot, ja prakjame slikata
+         $imgName = $user->profile_picture; // filename-ot go chuvame vo baza
+         $imgData = base64_encode(File::get('uploads/profile_pictures/' . $imgName));
+         $user->profile_picture = $imgData;
+         // Log::info($imgData);
+
         return response()->json(compact('user'));
     }
 

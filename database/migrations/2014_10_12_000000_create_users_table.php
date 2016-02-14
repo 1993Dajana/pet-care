@@ -19,8 +19,8 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password', 60);
             $table->string('profile_picture');
-            $table->string('skype_id');   
-            $table->string('contact_number');         
+            $table->string('skype_id')->nullable();   
+            $table->string('contact_number')->nullable();         
             $table->rememberToken();
             $table->timestamps();
         });

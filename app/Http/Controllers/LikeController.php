@@ -6,9 +6,19 @@ use Illuminate\Http\Request;
 use App\Likes;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\AuthenticateController;
 
 class LikeController extends Controller
 {
+
+
+     public function __construct()
+   {
+       // Apply the jwt.auth middleware to all methods in this controller
+      
+            $this->middleware('jwt.auth');
+   }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -33,6 +43,7 @@ class LikeController extends Controller
     public function destroy(Request $request, $id)  
     {
        
+
         $data = [];
         $like = Likes::where('post_id', $id)->where('user_id', $request->user()->id);
         if($like){

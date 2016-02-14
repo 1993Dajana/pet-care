@@ -149,7 +149,9 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
         Barryvdh\Cors\ServiceProvider::class,
-        // Torann\GeoIP\GeoIPServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
+
+
 
         /*
          * Application Service Providers...
@@ -206,7 +208,7 @@ return [
         'View'      => Illuminate\Support\Facades\View::class,
         'JWTAuth'   => Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
-        // 'GeoIP' => Torann\GeoIP\GeoIPFacade::class,
+        'Image' => Intervention\Image\Facades\Image::class,
 
     ],
 

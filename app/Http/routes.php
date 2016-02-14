@@ -33,11 +33,16 @@ Route::group(['middleware' => 'web'], function () {
 
 	Route::group(['middleware' => 'cors' ,'prefix' => 'api'], function()
 	{
-	    Route::resource('authenticate', 'AuthenticateController', ['only' => ['index']]); // only index method
+	    Route::resource('authenticate', 'AuthenticateController', ['only' => ['index']]); // only index method - zemi gi site useri - ne go koristime
 	    Route::post('authenticate', 'AuthenticateController@authenticate'); // authenticate handles generating and returning a JWT.
 	    Route::get('authenticate/user', 'AuthenticateController@getAuthenticatedUser');
 	    Route::resource('register', 'RegisterController', ['only' => ['store']]); // only store method
 	    Route::resource('posts', 'PostController');
+		Route::get('post/comments/{id}', 'CommentController@loadCommentsForPost');
+		Route::post('post/comment', 'CommentController@store');
+		Route::get('post/like/{id}', 'LikeController@store');
+		Route::get('post/unlike/{id}', 'LikeController@destroy');
+
 	});  
 
    
@@ -50,27 +55,21 @@ Route::group(['middleware' => 'web'], function () {
 
 			// Route::get('api/posts', 'PostController@index');
 
+		
 			
 
-			
+			// Route::get('users/{id}','UserController@user_posts')->where('id', '[0-9]+');
 
-			Route::get('users/{id}','UserController@user_posts')->where('id', '[0-9]+');
+		 //  	Route::post('users/subscribe/{id}', 'UserController@subscribe')->where('id', '[0-9]+');
 
-		  	Route::post('users/subscribe/{id}', 'UserController@subscribe')->where('id', '[0-9]+');
 
-			// Route::get('posts/add', 'PostController@create');
+			// Route::get('posts/like/{id}', 'LikeController@store');
 
-			// Route::post('posts/add', 'PostController@store');
+			// Route::get('posts/unlike/{id}', 'LikeController@destroy');
 
-			// Route::get('posts/{id}',['as' => 'post', 'uses' => 'PostController@show'])->where('id', '[0-9]+');
+			// Route::post('comments/add', 'CommentController@store');
 
-			Route::get('posts/like/{id}', 'LikeController@store');
-
-			Route::get('posts/unlike/{id}', 'LikeController@destroy');
-
-			Route::post('comments/add', 'CommentController@store');
-
-			Route::post('comments/delete/{id}', 'CommentController@destroy');	
+			// Route::post('comments/delete/{id}', 'CommentController@destroy');	
 
 		 // });
 		
