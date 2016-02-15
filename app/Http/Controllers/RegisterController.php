@@ -9,6 +9,8 @@ use App\Http\Controllers\Controller;
 use App\User;
 use Log;
 use Illuminate\Support\Facades\Input as Input;
+use File;
+use Intervention\Image\Facades\Image as Image;
 
 class RegisterController extends Controller
 {
@@ -58,7 +60,10 @@ class RegisterController extends Controller
             $file = Input::file('profile_picture');
             $extension = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
             $filename = base64_encode($user->email) . "." . $extension;
-            $file->move('uploads/profile_pictures', $filename);
+            $file->move('uploads/profile_pictures', $filename); // vistinskata profilna slika
+            $image = Image::make('uploads/profile_pictures/' . $filename);
+            $image->fit(160, 160);
+            $image->save('uploads/profile_pictures/thumbnails/' . $filename); // update vo folder
             $user->profile_picture = $filename;
         }
 

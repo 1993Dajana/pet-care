@@ -86,7 +86,7 @@ class AuthenticateController extends Controller
 
         // namesto filename na profile-picture-ot na user-ot, ja prakjame slikata
          $imgName = $user->profile_picture; // filename-ot go chuvame vo baza
-         $imgData = base64_encode(File::get('uploads/profile_pictures/' . $imgName));
+         $imgData = base64_encode(File::get('uploads/profile_pictures/thumbnails/' . $imgName));
          $user->profile_picture = $imgData;
          // Log::info($imgData);
 

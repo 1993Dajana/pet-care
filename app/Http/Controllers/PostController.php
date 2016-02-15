@@ -51,27 +51,29 @@ class PostController extends Controller
              // slika na user koj postiral
              $post->user = $post->author; // tuka smeniv
              $imgName = $post->user->profile_picture;
-             if($imgName){
-                $imgData = base64_encode(File::get('uploads/profile_pictures/' . $imgName));
+             if($imgName!=""){
+                $imgData = base64_encode(File::get('uploads/profile_pictures/thumbnails/' . $imgName));
              } else {
                 $post->user->profile_picture = base64_encode(File::get('uploads/profile_pictures/profile_picture.png'));
              }
               $post->user->profile_picture = $imgData;
              
+             // komentari
              $comments = $post->comments;
-             // zemi gi slikite na korisnicite koi komentirale
-             foreach ($comments as $comment) {
-                 $comment->user = User::find($comment->user_id);
-                 $imgName = $comment->user->profile_picture;
-                 if($imgName){
-                    $imgData = base64_encode(File::get('uploads/profile_pictures/' . $imgName));
-                } else {
-                    $imgData = base64_encode(File::get('uploads/profile_pictures/profile_picture.png'));
-                }
+             
+             // // zemi gi slikite na korisnicite koi komentirale
+             // foreach ($comments as $comment) {
+             //     $comment->user = User::find($comment->user_id);
+             //     $imgName = $comment->user->profile_picture;
+             //     if($imgName){
+             //        $imgData = base64_encode(File::get('uploads/profile_pictures/' . $imgName));
+             //    } else {
+             //        $imgData = base64_encode(File::get('uploads/profile_pictures/profile_picture.png'));
+             //    }
                  
-                 $comment->user->profile_picture = $imgData;
-             }
-             $post->comments = $comments;
+             //     $comment->user->profile_picture = $imgData;
+             // }
+             // $post->comments = $comments;
 
              // dodaj gi site likes na ovoj post vo response-ot samo kako brojka (poseben servis za koi useri :))
              $post->nComments = count($comments);
@@ -149,8 +151,53 @@ class PostController extends Controller
             $post->post_picture = $filename;
         }
         $post->save();
-        // return redirect('home');
     }  
+
+    public function loadPostsByUser(Request $request, $id)
+    {
+        $posts = Posts::where('user_id', $id)->orderBy('created_at','desc')->get();
+         // bidejkji vo baza chuvame samo ime na slika, 
+        foreach ($posts as $key => $post) {
+             // slika na user
+             $post->user = $post->author;
+             // za sekoj user koj go postavil komentarot ima
+             $imgName = $post->user->profile_picture;
+             if($imgName != ""){
+                $imgData = base64_encode(File::get('uploads/profile_pictures/thumbnails/' . $imgName));
+             } else {
+                $post->user->profile_picture = base64_encode(File::get('uploads/profile_pictures/profile_picture.png'));
+             }
+             $imgData = base64_encode(File::get('uploads/profile_pictures/thumbnails/' . $imgName));
+             $post->user->profile_picture = $imgData;
+
+             // slika na post
+             $imgName = $post->post_picture;
+             if($imgName != ""){
+                $imgData = base64_encode(File::get('uploads/posts/' . $imgName));
+                $post->post_picture = $imgData;
+             }
+
+              // komentari
+             $comments = $post->comments;
+
+             // dodaj gi site likes na ovoj post vo response-ot samo kako brojka (poseben servis za koi useri :))
+             $post->nComments = count($comments);
+             $post->nLikes = count($post->likes);
+
+             // za sekoj post, vo odnos na toa koj user e avtenticiran t.e. go napravil requestot, pushti mu
+             // flagche dali vekje go lajknal postot ili ne, za da mozhe da se sredi soodvetno vo angular :)
+             
+             if(count(Likes::where('post_id', $post->id)->where('user_id', $request->user()->id)->get()) == 1 ){
+                    // povekje e greshka
+                    $post->liked = true;
+             } else {
+                    $post->liked = false;
+             }
+             
+        }
+        
+        return response()->json(['posts' => $posts]);
+    }
 
     /**
      * Display the specified resource.
@@ -171,5 +218,30 @@ class PostController extends Controller
                  // ->setCallback($request->input('callback'));
         // return view('posts.show')->withPost($post)->withComments($comments);
      
+    }
+
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Request $request, $id)
+    {
+        $data = [];
+        $post = Posts::find($id);
+        if($post){
+            if($post->user_id == $request->user()->id){
+                 $post->delete();
+            } else {
+                // vrakjam 401 unauthorized
+            return response()->json([], 401);
+            }
+           
+        } else {
+            // vrakjam 404 not found
+            return response()->json([], 404);
+        }
     }
 }

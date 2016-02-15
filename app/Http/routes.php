@@ -42,6 +42,7 @@ Route::group(['middleware' => 'web'], function () {
 		Route::post('post/comment', 'CommentController@store');
 		Route::get('post/like/{id}', 'LikeController@store');
 		Route::get('post/unlike/{id}', 'LikeController@destroy');
+		Route::get('users/posts/{id}', 'PostController@loadPostsByUser');
 
 	});  
 

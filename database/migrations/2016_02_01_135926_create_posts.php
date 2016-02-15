@@ -22,8 +22,8 @@ class CreatePosts extends Migration
                 $table->text('message');
                 $table->string('address')->nullable();
                 $table->timestamps();   // publishedon i last modifed e ova :D
-                $table->float('longitude');
-                $table->float('latitude');
+                $table->float('longitude')->nullable();
+                $table->float('latitude')->nullable();
                 $table->string('post_picture');
                 $table->enum('type',['found','lost','adopt', 'sell', 'injured'])->default('found');  
         });

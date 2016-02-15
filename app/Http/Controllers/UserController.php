@@ -50,4 +50,9 @@ class UserController extends Controller {
     // $data['latest_comments'] = $data['user'] -> comments -> take(5);
     return view('users.profile', $data);
   }
+
+
+
+    
+    
 }

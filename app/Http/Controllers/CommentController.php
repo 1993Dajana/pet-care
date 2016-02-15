@@ -52,17 +52,20 @@ class CommentController extends Controller
     }
 
 
-    // OVA NE SE KORISTI, KOMENTARITE GI LOADIRAME PRI ZEMANJE NA POST
+    
     public function loadCommentsForPost($id)
     {
-        $comments = Comments::where('post_id', $id)->orderBy('created_at','desc')->get();
+
+        $comments = Comments::where('post_id', $id)->orderBy('created_at','asc')->get();
          // bidejkji vo baza chuvame samo ime na slika, 
-        foreach ($comments as $comment) {
+        Log::info($comments);
+        foreach ($comments as $key => $comment) {
              $comment->user = User::find($comment->user_id);
              $imgName = $comment->user->profile_picture;
-             $imgData = base64_encode(File::get('uploads/profile_pictures/' . $imgName));
+             $imgData = base64_encode(File::get('uploads/profile_pictures/thumbnails/' . $imgName));
              $comment->user->profile_picture = $imgData;
         }
+        
         return response()->json(['comments' => $comments]);
     }
 }
